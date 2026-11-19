@@ -1,0 +1,82 @@
+# ============================================================
+# Agentic Buddies — 根目录 .gitignore
+# 整合 agentic-buddies-backend / core / dashboard / mineflayer-demo
+# 的忽略规则，供整个目录作为单一仓库开源时使用。
+# ============================================================
+
+# ---------- 密钥与本地配置（最高优先级） ----------
+.env
+.env.*
+!.env.example
+
+# core 与 backend 的 conf.yaml 含本地密钥/默认重置密码，必须忽略；
+# mineflayer 的 conf.yaml 只含 host/port/URL，保留在仓库中。
+/agentic-buddies-core/conf.yaml
+/agentic-buddies-core/conf.yaml.bak
+/agentic-buddies-core/conf.yaml.old
+/agentic-buddies-backend/conf.yaml
+/agentic-buddies-backend/conf.yaml.bak
+/agentic-buddies-backend/conf.yaml.old
+
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+id_rsa*
+id_ed25519*
+**/credentials.*
+**/secrets.*
+
+# ---------- Python ----------
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+build/
+wheels/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+coverage.xml
+.tox/
+.nox/
+
+# ---------- Node / 前端 ----------
+node_modules/
+dist/
+dist-ssr/
+.vite/
+*.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ---------- 运行数据 / 记忆库 ----------
+db/
+*.db
+*.sqlite
+*.sqlite3
+logs/
+*.log
+
+# ---------- 本地工具 / 编辑器 ----------
+# 根目录与各子项目的 Kilo 状态、依赖和任务缓存
+.kilo/
+.idea/
+**/.vscode/*
+!**/.vscode/extensions.json
+.DS_Store
+Thumbs.db
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

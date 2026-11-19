@@ -1,0 +1,122 @@
+# agentic-buddies-core 配置文件
+# 数据库 / 记忆 / LLM 等配置统一入口
+
+# Mock 模式：跳过真实 LLM/TeleMem 调用，用于无密钥时验证管线连通性
+mock: false
+
+# ----------------------------------------------------------
+# 长期记忆（TeleMem）
+# legacy 版本默认关闭：不读不写记忆，也不初始化 TeleMem，
+# 因此无需 embedding / LLM 密钥即可启动。
+# ----------------------------------------------------------
+memory:
+  enabled: false          # true 时启用长期记忆（需配置下方 telemem 段的密钥）
+  player_isolation: true  # true 时强制玩家级作用域 npc{id}:p{uuid}；缺 player_uuid 则跳过记忆
+
+server:
+  host: 0.0.0.0
+  port: 8001
+  reload: false
+
+# ----------------------------------------------------------
+# 会话管理
+# ----------------------------------------------------------
+session:
+  timeout_minutes: 5            # 会话空闲过期时间（分钟）
+  max_turns: 20                 # 单会话最大对话轮数
+
+database:
+  postgresql:
+    host: localhost
+    port: 5432
+    user: ab_admin
+    password: [your_password]
+    database: ab_database
+    pool_size: 10
+    max_overflow: 20
+    echo: false
+
+# ----------------------------------------------------------
+# TeleMem 记忆系统 (Mem0 兼容)
+# 结构对齐 TeleMem 官方 config.yaml 格式
+# ----------------------------------------------------------
+telemem:
+  llm:
+    # OpenAI兼容即可
+    provider: openai
+    config:
+      model: deepseek-v4-flash
+      openai_base_url: https://api.deepseek.com/v1
+      temperature: 0.7
+      api_key: [服务商密钥]
+
+  embedder:
+    # 文本嵌入服务商，建议用阿里云百炼平台的qwen3.7-text-embedding
+    provider: openai
+    config:
+      model: qwen3.7-text-embedding
+      openai_base_url: [文本嵌入API地址]
+      api_key: [文本嵌入API密钥]
+
+  vector_store:
+    provider: faiss                           # 本地 FAISS，无需外部服务
+    config:
+      collection_name: telemem
+      path: db/faiss_db                       # FAISS 索引持久化路径
+      history_db_path: db/history.db          # 历史 SQLite 路径
+      buffer_size: 64                         # 批量写入阈值 (条)
+      similarity_threshold: 0.95              # 语义去重相似度阈值
+
+
+# ----------------------------------------------------------
+# LLMRouter
+# ----------------------------------------------------------
+llm_router:
+  # 路由策略: budget | balanced | premium
+  profile: balanced
+
+  # 执行模式: shadow (仅观察) | suggest (提示) | enforce (强制执行)
+  enforce: enforce
+
+  # 路由模型（用于复杂度分类，独立于执行模型）
+  # 该模型只需准备所需MCP和行为树，推荐使用小模型
+  router_model:
+    provider: deepseek            # 模型服务商
+    model: deepseek-v4-flash          # 模型
+    base_url: https://api.deepseek.com/v1   # 兼容OpenAI格式就行，这里用的是Deepseek
+    api_key: [服务商密钥]  # API密钥
+
+  # 本地 OpenAI 兼容网关识别（通用规则）：base_url 命中以下关键字时，
+  # 一律走 json_schema（NativeOutput）结构化——本地网关（如 LM Studio）不支持
+  # json_object 响应格式，但支持 json_schema。换任何本地模型都无需改配置。
+  local_gateway_keywords:
+    - 127.0.0.1
+    - localhost
+
+# ----------------------------------------------------------
+# 内容审核（本地/云端）
+# ----------------------------------------------------------
+content_moderation:
+  # 模式: local / cloud
+  mode: local  # 或 cloud
+
+  # 本地模式配置（mode: local 时生效）
+  local:
+    # 使用 word_list 表，block_level >= 3 直接拦截
+    force_block_threshold: 3
+
+  # 云端模式配置（mode: cloud 时生效）
+  cloud:
+    provider: aliyun
+    access_key_id: [访问密钥id]
+    access_key_secret: [访问密钥密码]
+    region: cn-shanghai
+    scenes:
+      - llm_query_moderation
+      - llm_response_moderation
+
+# ----------------------------------------------------------
+# NPC Worker Pool
+# ----------------------------------------------------------
+npc_pool:
+  max_concurrency: 5              # 同时处理 NPC 请求的最大并发数

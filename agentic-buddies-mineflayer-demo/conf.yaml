@@ -1,0 +1,23 @@
+# agentic-buddies-mineflayer-demo 配置文件
+# 结构对齐 agentic-buddies-core/conf.yaml 风格
+# 优先级：环境变量 > conf.yaml > 代码默认值
+
+# ----------------------------------------------------------
+# 核心 API（agentic-buddies-core / Harness）
+# ----------------------------------------------------------
+core:
+  api_url: http://localhost:8001     # 也可用环境变量 CORE_URL 覆盖
+  chat_timeout_ms: 90000             # 对话请求超时（core 内部 60s）
+
+# ----------------------------------------------------------
+# 管理端 API（agentic-buddies-backend，NPC 数据源）
+# ----------------------------------------------------------
+backend:
+  api_url: http://localhost:8000     # 环境变量 BACKEND_URL 覆盖
+
+# ----------------------------------------------------------
+# 目标 Minecraft 服务器
+# ----------------------------------------------------------
+minecraft:
+  host: localhost                    # 服务器地址（环境变量 MC_HOST 覆盖）
+  port: 25565                        # 服务器端口（环境变量 MC_PORT 覆盖）

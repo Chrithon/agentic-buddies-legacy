@@ -1,0 +1,28 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# configure file（conf.yaml.example 为模板，需保留在版本库）
+conf.yaml
+conf.yaml.bak
+conf.yaml.old
+
+# 环境变量与密钥（切勿提交）
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# 记忆/运行数据（含对话内容，勿提交）
+db/
+*.db
+*.log
+

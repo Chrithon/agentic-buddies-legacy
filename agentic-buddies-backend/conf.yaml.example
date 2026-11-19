@@ -1,0 +1,15 @@
+# agentic-buddies-backend 本地配置模板
+#
+# 复制为 conf.yaml 后按需修改；conf.yaml 已被 .gitignore 忽略，
+# 仓库中只保留本示例文件。
+
+server:
+  host: 0.0.0.0
+  port: 8000
+  reload: false                # 开发时建议 true（热重载），生产必须 false
+
+auth:
+  # 管理员重置用户密码后的默认密码。
+  # 留空则重置接口返回“未配置默认重置密码”，不会回退到硬编码值。
+  # 生产环境请设置为强密码，并要求用户首次登录后修改。
+  default_reset_password: ""
