@@ -1,7 +1,7 @@
 # AgenticBuddies（Legacy · v1）
 
 > [!CAUTION]
-> ⚠️ 本项目已归档，不再维护，**不再接受 PR / Issue**；仅供考古与参考。
+> ⚠️ 本项目已即将归档，不再维护，**不再接受 PR / Issue**；仅供考古与参考。
 
 > 一句话：给 Minecraft 的 AI 同伴系统——玩家在面板里配置 NPC，核心引擎驱动对话与行为，Mineflayer 接入服务器。
 
